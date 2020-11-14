@@ -1,0 +1,1096 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CheatTable CheatEngineTableVersion="34">
+  <CheatEntries>
+    <CheatEntry>
+      <ID>1</ID>
+      <Description>"一击必杀"</Description>
+      <LastState Activated="1"/>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>define(address,"Sakuna.exe"+AFCF0)
+define(bytes,F3 0F 11 08 48 8B 0B)
+
+[ENABLE]
+assert(address,bytes)
+alloc(newmem,$1000,"Sakuna.exe"+AFCF0)
+
+label(code return)
+label(enemy player)
+label(pHp)
+
+newmem:
+  pushfq
+  test rdx,rdx
+  jz enemy
+  jmp player
+
+enemy: // 一击必杀敌人
+  xorps xmm1,xmm1
+  jmp code
+
+player: // 100 hp
+  mov [pHp],rax
+  movss xmm1,xmm2
+  jmp code
+
+code:
+  popfq
+  movss [rax],xmm1
+  mov rcx,[rbx]
+  jmp return
+align 10 CC
+pHp:
+  dq 0
+
+address:
+  jmp newmem
+  nop 2
+return:
+
+registerSymbol(pHp)
+[DISABLE]
+address:
+  db bytes
+
+unregisterSymbol(pHp)
+dealloc(newmem)
+
+{
+// ORIGINAL CODE - INJECTION POINT: Sakuna.exe+AFCF0
+
+Sakuna.exe+AFCCD: F3 0F 5D C6           - minss xmm0,xmm6
+Sakuna.exe+AFCD1: 0F 28 C8              - movaps xmm1,xmm0
+Sakuna.exe+AFCD4: 8B 47 10              - mov eax,[rdi+10]
+Sakuna.exe+AFCD7: C1 E8 04              - shr eax,04
+Sakuna.exe+AFCDA: A8 01                 - test al,01
+Sakuna.exe+AFCDC: 74 0E                 - je Sakuna.exe+AFCEC
+Sakuna.exe+AFCDE: 48 8B 47 08           - mov rax,[rdi+08]
+Sakuna.exe+AFCE2: 48 8B 80 B8 00 00 00  - mov rax,[rax+000000B8]
+Sakuna.exe+AFCE9: 48 8B 38              - mov rdi,[rax]
+Sakuna.exe+AFCEC: 48 8B 47 18           - mov rax,[rdi+18]
+// ---------- INJECTING HERE ----------
+Sakuna.exe+AFCF0: F3 0F 11 08           - movss [rax],xmm1
+// ---------- DONE INJECTING  ----------
+Sakuna.exe+AFCF4: 48 8B 0B              - mov rcx,[rbx]
+Sakuna.exe+AFCF7: 48 8B 5C 24 58        - mov rbx,[rsp+58]
+Sakuna.exe+AFCFC: 0F 28 74 24 30        - movaps xmm6,[rsp+30]
+Sakuna.exe+AFD01: 48 83 C4 40           - add rsp,40
+Sakuna.exe+AFD05: 5F                    - pop rdi
+Sakuna.exe+AFD06: 48 FF 25 FB B4 3C 00  - jmp qword ptr [Sakuna.exe+47B208]
+Sakuna.exe+AFD0D: E8 6E 40 37 00        - call Sakuna.exe+423D80
+Sakuna.exe+AFD12: 90                    - nop 
+Sakuna.exe+AFD13: CC                    - int 3 
+Sakuna.exe+AFD14: CC                    - int 3 
+}
+</AssemblerScript>
+      <CheatEntries>
+        <CheatEntry>
+          <ID>2</ID>
+          <Description>"hp"</Description>
+          <ShowAsSigned>0</ShowAsSigned>
+          <VariableType>Float</VariableType>
+          <Address>[pHp]</Address>
+        </CheatEntry>
+      </CheatEntries>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>29</ID>
+      <Description>"饱足"</Description>
+      <LastState Activated="1"/>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>define(address,"Sakuna.exe"+2591AC)
+define(bytes,F3 0F 11 67 0C)
+
+[ENABLE]
+assert(address,bytes)
+alloc(newmem,$1000,"Sakuna.exe"+2591AC)
+
+label(code)
+label(return)
+
+newmem:
+
+code:
+  movss [rdi+0C],xmm10
+  jmp return
+
+address:
+  jmp newmem
+return:
+
+[DISABLE]
+
+address:
+  db bytes
+  // movss [rdi+0C],xmm4
+
+dealloc(newmem)
+
+{
+// ORIGINAL CODE - INJECTION POINT: Sakuna.exe+2591AC
+
+Sakuna.exe+259183: F2 41 0F 10 47 20        - movsd xmm0,[r15+20]
+Sakuna.exe+259189: F2 0F 5E 05 97 CD 32 00  - divsd xmm0,[Sakuna.exe+585F28]
+Sakuna.exe+259191: 66 0F 5A C8              - cvtpd2ps xmm1,xmm0
+Sakuna.exe+259195: F3 0F 5E CA              - divss xmm1,xmm2
+Sakuna.exe+259199: 0F 28 DE                 - movaps xmm3,xmm6
+Sakuna.exe+25919C: F3 0F 5C D9              - subss xmm3,xmm1
+Sakuna.exe+2591A0: 0F 2F E3                 - comiss xmm4,xmm3
+Sakuna.exe+2591A3: 77 07                    - ja Sakuna.exe+2591AC
+Sakuna.exe+2591A5: F3 0F 5D EB              - minss xmm5,xmm3
+Sakuna.exe+2591A9: 0F 28 E5                 - movaps xmm4,xmm5
+// ---------- INJECTING HERE ----------
+Sakuna.exe+2591AC: F3 0F 11 67 0C           - movss [rdi+0C],xmm4
+// ---------- DONE INJECTING  ----------
+Sakuna.exe+2591B1: F3 0F 10 05 17 CB 32 00  - movss xmm0,[Sakuna.exe+585CD0]
+Sakuna.exe+2591B9: 0F 2F F0                 - comiss xmm6,xmm0
+Sakuna.exe+2591BC: 0F 86 74 01 00 00        - jbe Sakuna.exe+259336
+Sakuna.exe+2591C2: 0F 2F C4                 - comiss xmm0,xmm4
+Sakuna.exe+2591C5: 0F 82 6B 01 00 00        - jb Sakuna.exe+259336
+Sakuna.exe+2591CB: 48 8B 47 18              - mov rax,[rdi+18]
+Sakuna.exe+2591CF: 48 89 47 20              - mov [rdi+20],rax
+Sakuna.exe+2591D3: 33 C0                    - xor eax,eax
+Sakuna.exe+2591D5: 48 89 47 30              - mov [rdi+30],rax
+Sakuna.exe+2591D9: 89 47 38                 - mov [rdi+38],eax
+}
+</AssemblerScript>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>40</ID>
+      <Description>"技力"</Description>
+      <LastState Activated="1"/>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>define(address,"Sakuna.exe"+EB26A)
+define(bytes,F3 0F 11 08 48 8B 83 E8 06 00 00)
+
+[ENABLE]
+assert(address,bytes)
+alloc(newmem,$1000,"Sakuna.exe"+EB26A)
+
+label(code)
+label(return)
+
+newmem:
+
+code:
+  movss [rax],xmm2
+  mov rax,[rbx+000006E8]
+  jmp return
+
+address:
+  jmp newmem
+  nop 6
+return:
+
+[DISABLE]
+
+address:
+  db bytes
+  // movss [rax],xmm1
+  // mov rax,[rbx+000006E8]
+
+dealloc(newmem)
+
+{
+// ORIGINAL CODE - INJECTION POINT: Sakuna.exe+EB26A
+
+Sakuna.exe+EB246: 0F 57 C9                       - xorps xmm1,xmm1
+Sakuna.exe+EB249: 0F 57 C0                       - xorps xmm0,xmm0
+Sakuna.exe+EB24C: 0F 2F CF                       - comiss xmm1,xmm7
+Sakuna.exe+EB24F: F3 48 0F 2A C0                 - cvtsi2ss xmm0,rax
+Sakuna.exe+EB254: 77 07                          - ja Sakuna.exe+EB25D
+Sakuna.exe+EB256: F3 0F 5D C7                    - minss xmm0,xmm7
+Sakuna.exe+EB25A: 0F 28 C8                       - movaps xmm1,xmm0
+Sakuna.exe+EB25D: 48 8B 07                       - mov rax,[rdi]
+Sakuna.exe+EB260: 48 8B 7C 24 50                 - mov rdi,[rsp+50]
+Sakuna.exe+EB265: 0F 28 7C 24 20                 - movaps xmm7,[rsp+20]
+// ---------- INJECTING HERE ----------
+Sakuna.exe+EB26A: F3 0F 11 08                    - movss [rax],xmm1
+// ---------- DONE INJECTING  ----------
+Sakuna.exe+EB26E: 48 8B 83 E8 06 00 00           - mov rax,[rbx+000006E8]
+Sakuna.exe+EB275: 48 8B 88 F8 00 00 00           - mov rcx,[rax+000000F8]
+Sakuna.exe+EB27C: 48 8B 01                       - mov rax,[rcx]
+Sakuna.exe+EB27F: F3 0F 5C 30                    - subss xmm6,[rax]
+Sakuna.exe+EB283: C7 83 18 09 00 00 00 00 00 41  - mov [rbx+00000918],41000000
+Sakuna.exe+EB28D: F3 0F 11 B3 14 09 00 00        - movss [rbx+00000914],xmm6
+Sakuna.exe+EB295: 0F 28 74 24 30                 - movaps xmm6,[rsp+30]
+Sakuna.exe+EB29A: 48 83 C4 40                    - add rsp,40
+Sakuna.exe+EB29E: 5B                             - pop rbx
+Sakuna.exe+EB29F: C3                             - ret 
+}
+</AssemblerScript>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>44</ID>
+      <Description>"食材"</Description>
+      <LastState Activated="1"/>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>define(address,"Sakuna.exe"+221B86)
+define(bytes,48 8B 96 70 02 00 00)
+
+[ENABLE]
+assert(address,bytes)
+alloc(newmem,$1000,"Sakuna.exe"+221B86)
+
+label(code return)
+label(loop)
+
+newmem:
+  mov rdx,[rsi+00000270]
+  push rcx
+  push rdx
+  push r8
+
+  cmp rcx,rdx
+  je code
+
+  loop: // 遍历食材列表
+  mov r8,[rcx]
+  mov [r8+14],#999
+  add rcx,08
+  cmp rcx,rdx
+  jne loop
+
+code:
+  pop r8
+  pop rdx
+  pop rcx
+  jmp return
+
+address:
+  jmp newmem
+  nop 2
+return:
+
+[DISABLE]
+address:
+  db bytes
+
+dealloc(newmem)
+
+{
+// ORIGINAL CODE - INJECTION POINT: Sakuna.exe+221B86
+
+Sakuna.exe+221B60: 4C 63 C0              - movsxd  r8,eax
+Sakuna.exe+221B63: 48 8B 86 48 02 00 00  - mov rax,[rsi+00000248]
+Sakuna.exe+221B6A: 4E 8B 04 C0           - mov r8,[rax+r8*8]
+Sakuna.exe+221B6E: 41 8B 58 14           - mov ebx,[r8+14]
+Sakuna.exe+221B72: 48 8B 07              - mov rax,[rdi]
+Sakuna.exe+221B75: 48 8B CF              - mov rcx,rdi
+Sakuna.exe+221B78: FF 50 08              - call qword ptr [rax+08]
+Sakuna.exe+221B7B: 3C 01                 - cmp al,01
+Sakuna.exe+221B7D: 75 29                 - jne Sakuna.exe+221BA8
+Sakuna.exe+221B7F: 48 8B 8E 68 02 00 00  - mov rcx,[rsi+00000268]
+// ---------- INJECTING HERE ----------
+Sakuna.exe+221B86: 48 8B 96 70 02 00 00  - mov rdx,[rsi+00000270]
+// ---------- DONE INJECTING  ----------
+Sakuna.exe+221B8D: 48 3B CA              - cmp rcx,rdx
+Sakuna.exe+221B90: 74 16                 - je Sakuna.exe+221BA8
+Sakuna.exe+221B92: 4C 8B 01              - mov r8,[rcx]
+Sakuna.exe+221B95: 49 39 78 08           - cmp [r8+08],rdi
+Sakuna.exe+221B99: 75 04                 - jne Sakuna.exe+221B9F
+Sakuna.exe+221B9B: 41 03 58 14           - add ebx,[r8+14]
+Sakuna.exe+221B9F: 48 83 C1 08           - add rcx,08
+Sakuna.exe+221BA3: 48 3B CA              - cmp rcx,rdx
+Sakuna.exe+221BA6: 75 EA                 - jne Sakuna.exe+221B92
+Sakuna.exe+221BA8: 48 8B 74 24 38        - mov rsi,[rsp+38]
+}
+</AssemblerScript>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>48</ID>
+      <Description>"材料"</Description>
+      <LastState Activated="1"/>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>define(address,"Sakuna.exe"+221B6A)
+define(bytes,4E 8B 04 C0 41 8B 58 14)
+
+[ENABLE]
+assert(address,bytes)
+alloc(newmem,$1000,"Sakuna.exe"+221B6A)
+
+label(code)
+label(return)
+
+newmem:
+
+code:
+  mov r8,[rax+r8*8]
+  mov [r8+14],#999
+  mov ebx,[r8+14]
+  jmp return
+
+address:
+  jmp newmem
+  nop 3
+return:
+
+[DISABLE]
+
+address:
+  db bytes
+  // mov r8,[rax+r8*8]
+  // mov ebx,[r8+14]
+
+dealloc(newmem)
+
+{
+// ORIGINAL CODE - INJECTION POINT: Sakuna.exe+221B6A
+
+Sakuna.exe+221B4A: 57                    - push rdi
+Sakuna.exe+221B4B: 48 83 EC 20           - sub rsp,20
+Sakuna.exe+221B4F: 48 8B FA              - mov rdi,rdx
+Sakuna.exe+221B52: 48 8B F1              - mov rsi,rcx
+Sakuna.exe+221B55: 33 DB                 - xor ebx,ebx
+Sakuna.exe+221B57: E8 84 FE FF FF        - call Sakuna.exe+2219E0
+Sakuna.exe+221B5C: 85 C0                 - test eax,eax
+Sakuna.exe+221B5E: 78 12                 - js Sakuna.exe+221B72
+Sakuna.exe+221B60: 4C 63 C0              - movsxd  r8,eax
+Sakuna.exe+221B63: 48 8B 86 48 02 00 00  - mov rax,[rsi+00000248]
+// ---------- INJECTING HERE ----------
+Sakuna.exe+221B6A: 4E 8B 04 C0           - mov r8,[rax+r8*8]
+// ---------- DONE INJECTING  ----------
+Sakuna.exe+221B6E: 41 8B 58 14           - mov ebx,[r8+14]
+Sakuna.exe+221B72: 48 8B 07              - mov rax,[rdi]
+Sakuna.exe+221B75: 48 8B CF              - mov rcx,rdi
+Sakuna.exe+221B78: FF 50 08              - call qword ptr [rax+08]
+Sakuna.exe+221B7B: 3C 01                 - cmp al,01
+Sakuna.exe+221B7D: 75 29                 - jne Sakuna.exe+221BA8
+Sakuna.exe+221B7F: 48 8B 8E 68 02 00 00  - mov rcx,[rsi+00000268]
+Sakuna.exe+221B86: E9 75 E4 D9 FF        - jmp 7FF6EE720000
+Sakuna.exe+221B8B: 66 90                 - nop 2
+Sakuna.exe+221B8D: 48 3B CA              - cmp rcx,rdx
+}
+</AssemblerScript>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>54</ID>
+      <Description>"碾米"</Description>
+      <LastState Activated="1"/>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>define(address,"Sakuna.exe"+28B083)
+define(bytes,F3 0F 11 47 30)
+
+[ENABLE]
+assert(address,bytes)
+alloc(newmem,$1000,"Sakuna.exe"+28B083)
+
+label(code)
+label(return)
+
+newmem:
+
+code:
+  movss [rdi+30],xmm1
+  jmp return
+
+address:
+  jmp newmem
+return:
+
+[DISABLE]
+
+address:
+  db bytes
+  // movss [rdi+30],xmm0
+
+dealloc(newmem)
+
+{
+// ORIGINAL CODE - INJECTION POINT: Sakuna.exe+28B083
+
+Sakuna.exe+28B05B: F3 0F 5E F8              - divss xmm7,xmm0
+Sakuna.exe+28B05F: F3 0F 5C FE              - subss xmm7,xmm6
+Sakuna.exe+28B063: F3 0F 59 F9              - mulss xmm7,xmm1
+Sakuna.exe+28B067: F3 0F 58 F7              - addss xmm6,xmm7
+Sakuna.exe+28B06B: 0F 28 C6                 - movaps xmm0,xmm6
+Sakuna.exe+28B06E: F3 0F 58 47 30           - addss xmm0,[rdi+30]
+Sakuna.exe+28B073: F3 0F 10 0D D9 B0 2F 00  - movss xmm1,[Sakuna.exe+586154]
+Sakuna.exe+28B07B: 0F 2F C1                 - comiss xmm0,xmm1
+Sakuna.exe+28B07E: 76 03                    - jna Sakuna.exe+28B083
+Sakuna.exe+28B080: 0F 28 C1                 - movaps xmm0,xmm1
+// ---------- INJECTING HERE ----------
+Sakuna.exe+28B083: F3 0F 11 47 30           - movss [rdi+30],xmm0
+// ---------- DONE INJECTING  ----------
+Sakuna.exe+28B088: F3 0F 5E F1              - divss xmm6,xmm1
+Sakuna.exe+28B08C: 0F B6 4F 09              - movzx ecx,byte ptr [rdi+09]
+Sakuna.exe+28B090: 83 E9 09                 - sub ecx,09
+Sakuna.exe+28B093: 74 09                    - je Sakuna.exe+28B09E
+Sakuna.exe+28B095: 83 F9 01                 - cmp ecx,01
+Sakuna.exe+28B098: 75 22                    - jne Sakuna.exe+28B0BC
+Sakuna.exe+28B09A: B2 09                    - mov dl,09
+Sakuna.exe+28B09C: EB 02                    - jmp Sakuna.exe+28B0A0
+Sakuna.exe+28B09E: B2 08                    - mov dl,08
+Sakuna.exe+28B0A0: 48 8B 05 69 1B 3E 00     - mov rax,[Sakuna.exe+66CC10]
+}
+</AssemblerScript>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>31</ID>
+      <Description>"木魄"</Description>
+      <LastState Activated="1"/>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>define(address,"Sakuna.exe"+1441AB)
+define(bytes,44 8B 82 80 03 00 00)
+
+[ENABLE]
+assert(address,bytes)
+alloc(newmem,$1000,"Sakuna.exe"+1441AB)
+
+label(code)
+label(return)
+
+newmem:
+  mov [rdx+00000380],#999999
+code:
+  mov r8d,[rdx+00000380]
+  jmp return
+
+address:
+  jmp newmem
+  nop 2
+return:
+
+[DISABLE]
+
+address:
+  db bytes
+  // mov r8d,[rdx+00000380]
+
+dealloc(newmem)
+
+{
+// ORIGINAL CODE - INJECTION POINT: Sakuna.exe+1441AB
+
+Sakuna.exe+14417D: 48 8D 95 E0 00 00 00  - lea rdx,[rbp+000000E0]
+Sakuna.exe+144184: 49 8B CF              - mov rcx,r15
+Sakuna.exe+144187: E8 04 5D 1C 00        - call Sakuna.exe+309E90
+Sakuna.exe+14418C: 48 8B D8              - mov rbx,rax
+Sakuna.exe+14418F: 48 8D 8D E0 00 00 00  - lea rcx,[rbp+000000E0]
+Sakuna.exe+144196: E8 95 1A EC FF        - call Sakuna.exe+5C30
+Sakuna.exe+14419B: 48 85 DB              - test rbx,rbx
+Sakuna.exe+14419E: 74 3E                 - je Sakuna.exe+1441DE
+Sakuna.exe+1441A0: 48 8B 0D 69 8A 52 00  - mov rcx,[Sakuna.exe+66CC10]
+Sakuna.exe+1441A7: 48 8B 51 18           - mov rdx,[rcx+18]
+// ---------- INJECTING HERE ----------
+Sakuna.exe+1441AB: 44 8B 82 80 03 00 00  - mov r8d,[rdx+00000380]
+// ---------- DONE INJECTING  ----------
+Sakuna.exe+1441B2: 48 8D 15 D7 2E 42 00  - lea rdx,[Sakuna.exe+567090]
+Sakuna.exe+1441B9: 48 8D 8D 80 01 00 00  - lea rcx,[rbp+00000180]
+Sakuna.exe+1441C0: E8 2B DE 15 00        - call Sakuna.exe+2A1FF0
+Sakuna.exe+1441C5: 90                    - nop 
+Sakuna.exe+1441C6: 48 8B D0              - mov rdx,rax
+Sakuna.exe+1441C9: 48 8B CB              - mov rcx,rbx
+Sakuna.exe+1441CC: E8 8F 71 1C 00        - call Sakuna.exe+30B360
+Sakuna.exe+1441D1: 90                    - nop 
+Sakuna.exe+1441D2: 48 8D 8D 80 01 00 00  - lea rcx,[rbp+00000180]
+Sakuna.exe+1441D9: E8 52 1A EC FF        - call Sakuna.exe+5C30
+}
+</AssemblerScript>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>55</ID>
+      <Description>"天橞 HP"</Description>
+      <LastState Activated="1"/>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>define(address,"Sakuna.exe"+1D063A)
+define(bytes,F3 0F 5D C1)
+
+[ENABLE]
+assert(address,bytes)
+
+address:
+  db 90 90 90 90
+
+[DISABLE]
+address:
+  db bytes
+
+{
+// ORIGINAL CODE - INJECTION POINT: Sakuna.exe+1D063A
+
+Sakuna.exe+1D060D: 48 8B 8F 50 02 00 00     - mov rcx,[rdi+00000250]
+Sakuna.exe+1D0614: FF 15 06 AC 2A 00        - call qword ptr [Sakuna.exe+47B220]
+Sakuna.exe+1D061A: 0F 28 CE                 - movaps xmm1,xmm6
+Sakuna.exe+1D061D: F3 0F 58 8F 44 03 00 00  - addss xmm1,[rdi+00000344]
+Sakuna.exe+1D0625: 0F 57 D2                 - xorps xmm2,xmm2
+Sakuna.exe+1D0628: 0F 2F D1                 - comiss xmm2,xmm1
+Sakuna.exe+1D062B: 76 05                    - jna Sakuna.exe+1D0632
+Sakuna.exe+1D062D: 0F 57 C0                 - xorps xmm0,xmm0
+Sakuna.exe+1D0630: EB 0C                    - jmp Sakuna.exe+1D063E
+Sakuna.exe+1D0632: F3 0F 10 05 26 5C 3B 00  - movss xmm0,[Sakuna.exe+586260]
+// ---------- INJECTING HERE ----------
+Sakuna.exe+1D063A: F3 0F 5D C1              - minss xmm0,xmm1
+// ---------- DONE INJECTING  ----------
+Sakuna.exe+1D063E: F3 0F 11 87 44 03 00 00  - movss [rdi+00000344],xmm0
+Sakuna.exe+1D0646: 0F 2F D6                 - comiss xmm2,xmm6
+Sakuna.exe+1D0649: 76 3E                    - jna Sakuna.exe+1D0689
+Sakuna.exe+1D064B: 48 8B 87 70 02 00 00     - mov rax,[rdi+00000270]
+Sakuna.exe+1D0652: 48 85 C0                 - test rax,rax
+Sakuna.exe+1D0655: 74 32                    - je Sakuna.exe+1D0689
+Sakuna.exe+1D0657: F3 0F 10 8F 6C 03 00 00  - movss xmm1,[rdi+0000036C]
+Sakuna.exe+1D065F: 0F 28 C1                 - movaps xmm0,xmm1
+Sakuna.exe+1D0662: F3 0F 59 40 24           - mulss xmm0,[rax+24]
+Sakuna.exe+1D0667: F3 0F 5C C8              - subss xmm1,xmm0
+}
+</AssemblerScript>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>59</ID>
+      <Description>"天橞 得分"</Description>
+      <LastState Activated="1"/>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>define(address,"Sakuna.exe"+8326B)
+define(bytes,89 8F 64 03 00 00)
+
+[ENABLE]
+assert(address,bytes)
+alloc(newmem,$1000,"Sakuna.exe"+8326B)
+
+label(code)
+label(return)
+
+newmem:
+  mov ecx,0xEFFFFFFF
+code:
+  mov [rdi+00000364],ecx
+  jmp return
+
+address:
+  jmp newmem
+  nop
+return:
+
+[DISABLE]
+
+address:
+  db bytes
+  // mov [rdi+00000364],ecx
+
+dealloc(newmem)
+
+{
+// ORIGINAL CODE - INJECTION POINT: Sakuna.exe+8326B
+
+Sakuna.exe+83241: 8B 8F 64 03 00 00     - mov ecx,[rdi+00000364]
+Sakuna.exe+83247: BA FF E0 F5 05        - mov edx,05F5E0FF
+Sakuna.exe+8324C: 44 8B 87 5C 03 00 00  - mov r8d,[rdi+0000035C]
+Sakuna.exe+83253: 44 03 C3              - add r8d,ebx
+Sakuna.exe+83256: 44 3B C2              - cmp r8d,edx
+Sakuna.exe+83259: 44 0F 4F C2           - cmovg r8d,edx
+Sakuna.exe+8325D: 03 CB                 - add ecx,ebx
+Sakuna.exe+8325F: 3B CA                 - cmp ecx,edx
+Sakuna.exe+83261: 44 89 87 5C 03 00 00  - mov [rdi+0000035C],r8d
+Sakuna.exe+83268: 0F 4F CA              - cmovg ecx,edx
+// ---------- INJECTING HERE ----------
+Sakuna.exe+8326B: 89 8F 64 03 00 00     - mov [rdi+00000364],ecx
+// ---------- DONE INJECTING  ----------
+Sakuna.exe+83271: 48 8B 8F 50 02 00 00  - mov rcx,[rdi+00000250]
+Sakuna.exe+83278: 48 8B 5C 24 30        - mov rbx,[rsp+30]
+Sakuna.exe+8327D: 48 83 C4 20           - add rsp,20
+Sakuna.exe+83281: 5F                    - pop rdi
+Sakuna.exe+83282: 48 FF 25 7F 7F 3F 00  - jmp qword ptr [Sakuna.exe+47B208]
+Sakuna.exe+83289: CC                    - int 3 
+Sakuna.exe+8328A: CC                    - int 3 
+Sakuna.exe+8328B: CC                    - int 3 
+Sakuna.exe+8328C: CC                    - int 3 
+Sakuna.exe+8328D: CC                    - int 3 
+}
+</AssemblerScript>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>49</ID>
+      <Description>"一键收成"</Description>
+      <LastState/>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>// 一键收成，就算为成熟也能收成
+
+define(address,"Sakuna.exe"+6D2A5)
+define(bytes,41 0F B7 85 7A 05 00 00)
+
+[ENABLE]
+assert(address,bytes)
+alloc(newmem,$1000,"Sakuna.exe"+6D2A5)
+
+label(code)
+label(return)
+
+newmem:
+  mov [r13+57A],0
+code:
+  movzx eax,word ptr [r13+0000057A]
+  jmp return
+
+address:
+  jmp newmem
+  nop 3
+return:
+
+[DISABLE]
+
+address:
+  db bytes
+  // movzx eax,word ptr [r13+0000057A]
+
+dealloc(newmem)
+
+{
+// ORIGINAL CODE - INJECTION POINT: Sakuna.exe+6D2A5
+
+Sakuna.exe+6D27F: 48 83 C0 08                 - add rax,08
+Sakuna.exe+6D283: 48 3B C1                    - cmp rax,rcx
+Sakuna.exe+6D286: 75 E8                       - jne Sakuna.exe+6D270
+Sakuna.exe+6D288: 49 8B 4F 08                 - mov rcx,[r15+08]
+Sakuna.exe+6D28C: FF 15 76 DF 40 00           - call qword ptr [Sakuna.exe+47B208]
+Sakuna.exe+6D292: 48 8B 4C 24 28              - mov rcx,[rsp+28]
+Sakuna.exe+6D297: 49 83 C4 08                 - add r12,08
+Sakuna.exe+6D29B: 49 8D 44 24 FC              - lea rax,[r12-04]
+Sakuna.exe+6D2A0: 48 3B C1                    - cmp rax,rcx
+Sakuna.exe+6D2A3: 75 9B                       - jne Sakuna.exe+6D240
+// ---------- INJECTING HERE ----------
+Sakuna.exe+6D2A5: 41 0F B7 85 7A 05 00 00     - movzx eax,word ptr [r13+0000057A]
+// ---------- DONE INJECTING  ----------
+Sakuna.exe+6D2AD: F3 0F 10 46 10              - movss xmm0,[rsi+10]
+Sakuna.exe+6D2B2: F3 0F 58 46 1C              - addss xmm0,[rsi+1C]
+Sakuna.exe+6D2B7: 44 0F 28 9C 24 F0 00 00 00  - movaps xmm11,[rsp+000000F0]
+Sakuna.exe+6D2C0: 44 0F 28 94 24 00 01 00 00  - movaps xmm10,[rsp+00000100]
+Sakuna.exe+6D2C9: 44 0F 28 8C 24 10 01 00 00  - movaps xmm9,[rsp+00000110]
+Sakuna.exe+6D2D2: 44 0F 28 84 24 20 01 00 00  - movaps xmm8,[rsp+00000120]
+Sakuna.exe+6D2DB: F3 0F 11 46 1C              - movss [rsi+1C],xmm0
+Sakuna.exe+6D2E0: 89 86 E0 00 00 00           - mov [rsi+000000E0],eax
+Sakuna.exe+6D2E6: E9 A2 02 00 00              - jmp Sakuna.exe+6D58D
+Sakuna.exe+6D2EB: 49 8B 4F 08                 - mov rcx,[r15+08]
+}
+</AssemblerScript>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>36</ID>
+      <Description>"插秧/背包"</Description>
+      <LastState/>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>define(address,"Sakuna.exe"+271D94)
+define(bytes,8B 40 14 48 83 C4 20)
+
+[ENABLE]
+assert(address,bytes)
+alloc(newmem,$1000,"Sakuna.exe"+271D94)
+
+label(code)
+label(return)
+
+newmem:
+  mov [rax+14],0
+code:
+  mov eax,[rax+14]
+  add rsp,20
+  jmp return
+
+address:
+  jmp newmem
+  nop 2
+return:
+
+[DISABLE]
+
+address:
+  db bytes
+  // mov eax,[rax+14]
+  // add rsp,20
+
+dealloc(newmem)
+
+{
+// ORIGINAL CODE - INJECTION POINT: Sakuna.exe+271D94
+
+Sakuna.exe+271D6F: 48 8B 8B 48 02 00 00  - mov rcx,[rbx+00000248]
+Sakuna.exe+271D76: 8B D0                 - mov edx,eax
+Sakuna.exe+271D78: 48 8B 83 50 02 00 00  - mov rax,[rbx+00000250]
+Sakuna.exe+271D7F: 48 2B C1              - sub rax,rcx
+Sakuna.exe+271D82: 48 C1 F8 03           - sar rax,03
+Sakuna.exe+271D86: 48 3B D0              - cmp rdx,rax
+Sakuna.exe+271D89: 73 12                 - jae Sakuna.exe+271D9D
+Sakuna.exe+271D8B: 48 8B 04 D1           - mov rax,[rcx+rdx*8]
+Sakuna.exe+271D8F: 48 85 C0              - test rax,rax
+Sakuna.exe+271D92: 74 09                 - je Sakuna.exe+271D9D
+// ---------- INJECTING HERE ----------
+Sakuna.exe+271D94: 8B 40 14              - mov eax,[rax+14]
+// ---------- DONE INJECTING  ----------
+Sakuna.exe+271D97: 48 83 C4 20           - add rsp,20
+Sakuna.exe+271D9B: 5B                    - pop rbx
+Sakuna.exe+271D9C: C3                    - ret 
+Sakuna.exe+271D9D: 33 C0                 - xor eax,eax
+Sakuna.exe+271D9F: 48 83 C4 20           - add rsp,20
+Sakuna.exe+271DA3: 5B                    - pop rbx
+Sakuna.exe+271DA4: C3                    - ret 
+Sakuna.exe+271DA5: CC                    - int 3 
+Sakuna.exe+271DA6: CC                    - int 3 
+Sakuna.exe+271DA7: CC                    - int 3 
+}
+</AssemblerScript>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>38</ID>
+      <Description>"插秧"</Description>
+      <LastState/>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>define(address,"Sakuna.exe"+201CC8)
+define(bytes,89 48 20 E9 9A 15 00 00)
+
+[ENABLE]
+assert(address,bytes)
+alloc(newmem,$1000,"Sakuna.exe"+201CC8)
+
+label(code)
+label(return)
+
+newmem:
+  xor ecx,ecx
+  //mov ecx,#99
+code:
+  mov [rax+20],ecx
+  jmp Sakuna.exe+20326A
+  jmp return
+
+address:
+  jmp newmem
+  nop 3
+return:
+
+[DISABLE]
+
+address:
+  db bytes
+  // mov [rax+20],ecx
+  // jmp Sakuna.exe+20326A
+
+dealloc(newmem)
+
+{
+// ORIGINAL CODE - INJECTION POINT: Sakuna.exe+201CC8
+
+Sakuna.exe+201C9C: 48 8B CB              - mov rcx,rbx
+Sakuna.exe+201C9F: E8 3C 3C 12 00        - call Sakuna.exe+3258E0
+Sakuna.exe+201CA4: 48 89 44 24 40        - mov [rsp+40],rax
+Sakuna.exe+201CA9: 48 8B 05 60 AF 46 00  - mov rax,[Sakuna.exe+66CC10]
+Sakuna.exe+201CB0: B2 04                 - mov dl,04
+Sakuna.exe+201CB2: 48 8B 48 50           - mov rcx,[rax+50]
+Sakuna.exe+201CB6: E8 15 FE 06 00        - call Sakuna.exe+271AD0
+Sakuna.exe+201CBB: 48 85 C0              - test rax,rax
+Sakuna.exe+201CBE: 0F 84 A6 15 00 00     - je Sakuna.exe+20326A
+Sakuna.exe+201CC4: 8B 4C 24 40           - mov ecx,[rsp+40]
+// ---------- INJECTING HERE ----------
+Sakuna.exe+201CC8: 89 48 20              - mov [rax+20],ecx
+// ---------- DONE INJECTING  ----------
+Sakuna.exe+201CCB: E9 9A 15 00 00        - jmp Sakuna.exe+20326A
+Sakuna.exe+201CD0: E8 DB 00 07 00        - call Sakuna.exe+271DB0
+Sakuna.exe+201CD5: 0F B6 C0              - movzx eax,al
+Sakuna.exe+201CD8: 49 89 47 30           - mov [r15+30],rax
+Sakuna.exe+201CDC: 49 83 06 04           - add qword ptr [r14],04
+Sakuna.exe+201CE0: E9 85 15 00 00        - jmp Sakuna.exe+20326A
+Sakuna.exe+201CE5: 48 8B 05 24 AF 46 00  - mov rax,[Sakuna.exe+66CC10]
+Sakuna.exe+201CEC: B2 04                 - mov dl,04
+Sakuna.exe+201CEE: 48 8B 48 50           - mov rcx,[rax+50]
+Sakuna.exe+201CF2: E8 D9 FD 06 00        - call Sakuna.exe+271AD0
+}
+</AssemblerScript>
+    </CheatEntry>
+  </CheatEntries>
+  <CheatCodes>
+    <CodeEntry Color="20000000">
+      <Description>HP减少</Description>
+      <AddressString>Sakuna.exe+AFCF0</AddressString>
+      <Before>
+        <Byte>38</Byte>
+        <Byte>48</Byte>
+        <Byte>8B</Byte>
+        <Byte>47</Byte>
+        <Byte>18</Byte>
+      </Before>
+      <Actual>
+        <Byte>F3</Byte>
+        <Byte>0F</Byte>
+        <Byte>11</Byte>
+        <Byte>08</Byte>
+      </Actual>
+      <After>
+        <Byte>48</Byte>
+        <Byte>8B</Byte>
+        <Byte>0B</Byte>
+        <Byte>48</Byte>
+        <Byte>8B</Byte>
+      </After>
+    </CodeEntry>
+    <CodeEntry Color="20000000">
+      <Description>消耗饱足</Description>
+      <AddressString>Sakuna.exe+2591AC</AddressString>
+      <Before>
+        <Byte>5D</Byte>
+        <Byte>EB</Byte>
+        <Byte>0F</Byte>
+        <Byte>28</Byte>
+        <Byte>E5</Byte>
+      </Before>
+      <Actual>
+        <Byte>F3</Byte>
+        <Byte>0F</Byte>
+        <Byte>11</Byte>
+        <Byte>67</Byte>
+        <Byte>0C</Byte>
+      </Actual>
+      <After>
+        <Byte>F3</Byte>
+        <Byte>0F</Byte>
+        <Byte>10</Byte>
+        <Byte>05</Byte>
+        <Byte>17</Byte>
+      </After>
+    </CodeEntry>
+    <CodeEntry Color="20000000">
+      <Description>访问金币</Description>
+      <AddressString>Sakuna.exe+1441AB</AddressString>
+      <Before>
+        <Byte>00</Byte>
+        <Byte>48</Byte>
+        <Byte>8B</Byte>
+        <Byte>51</Byte>
+        <Byte>18</Byte>
+      </Before>
+      <Actual>
+        <Byte>44</Byte>
+        <Byte>8B</Byte>
+        <Byte>82</Byte>
+        <Byte>80</Byte>
+        <Byte>03</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+      </Actual>
+      <After>
+        <Byte>48</Byte>
+        <Byte>8D</Byte>
+        <Byte>15</Byte>
+        <Byte>D7</Byte>
+        <Byte>2E</Byte>
+      </After>
+    </CodeEntry>
+    <CodeEntry Color="20000000">
+      <Description>插秧</Description>
+      <AddressString>Sakuna.exe+201CC8</AddressString>
+      <Before>
+        <Byte>00</Byte>
+        <Byte>8B</Byte>
+        <Byte>4C</Byte>
+        <Byte>24</Byte>
+        <Byte>40</Byte>
+      </Before>
+      <Actual>
+        <Byte>89</Byte>
+        <Byte>48</Byte>
+        <Byte>20</Byte>
+      </Actual>
+      <After>
+        <Byte>E9</Byte>
+        <Byte>9A</Byte>
+        <Byte>15</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+      </After>
+    </CodeEntry>
+    <CodeEntry Color="20000000">
+      <Description>消耗技力</Description>
+      <AddressString>Sakuna.exe+EB26A</AddressString>
+      <Before>
+        <Byte>0F</Byte>
+        <Byte>28</Byte>
+        <Byte>7C</Byte>
+        <Byte>24</Byte>
+        <Byte>20</Byte>
+      </Before>
+      <Actual>
+        <Byte>F3</Byte>
+        <Byte>0F</Byte>
+        <Byte>11</Byte>
+        <Byte>08</Byte>
+      </Actual>
+      <After>
+        <Byte>48</Byte>
+        <Byte>8B</Byte>
+        <Byte>83</Byte>
+        <Byte>E8</Byte>
+        <Byte>06</Byte>
+      </After>
+    </CodeEntry>
+    <CodeEntry Color="20000000">
+      <Description>仓库食材</Description>
+      <AddressString>Sakuna.exe+221B9B</AddressString>
+      <Before>
+        <Byte>39</Byte>
+        <Byte>78</Byte>
+        <Byte>08</Byte>
+        <Byte>75</Byte>
+        <Byte>04</Byte>
+      </Before>
+      <Actual>
+        <Byte>41</Byte>
+        <Byte>03</Byte>
+        <Byte>58</Byte>
+        <Byte>14</Byte>
+      </Actual>
+      <After>
+        <Byte>48</Byte>
+        <Byte>83</Byte>
+        <Byte>C1</Byte>
+        <Byte>08</Byte>
+        <Byte>48</Byte>
+      </After>
+    </CodeEntry>
+    <CodeEntry Color="20000000">
+      <Description>访问了仓库材料</Description>
+      <AddressString>Sakuna.exe+221B6E</AddressString>
+      <Before>
+        <Byte>00</Byte>
+        <Byte>4E</Byte>
+        <Byte>8B</Byte>
+        <Byte>04</Byte>
+        <Byte>C0</Byte>
+      </Before>
+      <Actual>
+        <Byte>41</Byte>
+        <Byte>8B</Byte>
+        <Byte>58</Byte>
+        <Byte>14</Byte>
+      </Actual>
+      <After>
+        <Byte>48</Byte>
+        <Byte>8B</Byte>
+        <Byte>07</Byte>
+        <Byte>48</Byte>
+        <Byte>8B</Byte>
+      </After>
+    </CodeEntry>
+    <CodeEntry Color="20000000">
+      <Description>收割</Description>
+      <AddressString>Sakuna.exe+6D2E0</AddressString>
+      <Before>
+        <Byte>F3</Byte>
+        <Byte>0F</Byte>
+        <Byte>11</Byte>
+        <Byte>46</Byte>
+        <Byte>1C</Byte>
+      </Before>
+      <Actual>
+        <Byte>89</Byte>
+        <Byte>86</Byte>
+        <Byte>E0</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+      </Actual>
+      <After>
+        <Byte>E9</Byte>
+        <Byte>A2</Byte>
+        <Byte>02</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+      </After>
+    </CodeEntry>
+    <CodeEntry Color="20000000">
+      <Description>碾米</Description>
+      <AddressString>Sakuna.exe+28B083</AddressString>
+      <Before>
+        <Byte>76</Byte>
+        <Byte>03</Byte>
+        <Byte>0F</Byte>
+        <Byte>28</Byte>
+        <Byte>C1</Byte>
+      </Before>
+      <Actual>
+        <Byte>F3</Byte>
+        <Byte>0F</Byte>
+        <Byte>11</Byte>
+        <Byte>47</Byte>
+        <Byte>30</Byte>
+      </Actual>
+      <After>
+        <Byte>F3</Byte>
+        <Byte>0F</Byte>
+        <Byte>5E</Byte>
+        <Byte>F1</Byte>
+        <Byte>0F</Byte>
+      </After>
+    </CodeEntry>
+    <CodeEntry Color="20000000">
+      <Description>替换了 minss xmm0,xmm1</Description>
+      <AddressString>Sakuna.exe+1D063A</AddressString>
+      <Before>
+        <Byte>05</Byte>
+        <Byte>26</Byte>
+        <Byte>5C</Byte>
+        <Byte>3B</Byte>
+        <Byte>00</Byte>
+      </Before>
+      <Actual>
+        <Byte>F3</Byte>
+        <Byte>0F</Byte>
+        <Byte>5D</Byte>
+        <Byte>C1</Byte>
+      </Actual>
+      <After>
+        <Byte>F3</Byte>
+        <Byte>0F</Byte>
+        <Byte>11</Byte>
+        <Byte>87</Byte>
+        <Byte>44</Byte>
+      </After>
+    </CodeEntry>
+    <CodeEntry Color="20000000">
+      <Description>天橞hp</Description>
+      <AddressString>Sakuna.exe+1D063E</AddressString>
+      <Before>
+        <Byte>00</Byte>
+        <Byte>F3</Byte>
+        <Byte>0F</Byte>
+        <Byte>5D</Byte>
+        <Byte>C1</Byte>
+      </Before>
+      <Actual>
+        <Byte>F3</Byte>
+        <Byte>0F</Byte>
+        <Byte>11</Byte>
+        <Byte>87</Byte>
+        <Byte>44</Byte>
+        <Byte>03</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+      </Actual>
+      <After>
+        <Byte>0F</Byte>
+        <Byte>2F</Byte>
+        <Byte>D6</Byte>
+        <Byte>76</Byte>
+        <Byte>3E</Byte>
+      </After>
+    </CodeEntry>
+  </CheatCodes>
+  <UserdefinedSymbols/>
+  <Comments>0000000000000000
+00007fffffffffff
+00000233E0000000
+00000233Efffffff
+</Comments>
+  <DisassemblerComments>
+    <DisassemblerComment>
+      <Address>"Sakuna.exe"+221B6E</Address>
+      <Comment>访问了仓库材料
+</Comment>
+    </DisassemblerComment>
+    <DisassemblerComment>
+      <Address>"Sakuna.exe"+221B9B</Address>
+      <Comment>访问了仓库食材
+</Comment>
+    </DisassemblerComment>
+    <DisassemblerComment>
+      <Address>"Sakuna.exe"+221B9F</Address>
+      <Comment>每次循环偏移8
+</Comment>
+    </DisassemblerComment>
+  </DisassemblerComments>
+</CheatTable>
